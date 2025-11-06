@@ -110,5 +110,50 @@ join assigned_to a on e.empno = a.empno
 join project p on a.pno = p.pno
 where d.dloc = p.ploc;
 
+SELECT E2.ENAME AS Manager
+FROM EMPLOYEE E1
+JOIN EMPLOYEE E2 ON E1.MGR_NO = E2.EMPNO
+GROUP BY E2.ENAME
+HAVING COUNT(E1.EMPNO) = (
+    SELECT MAX(emp_count)
+    FROM (
+        SELECT COUNT(E1.EMPNO) AS emp_count
+        FROM EMPLOYEE E1
+        JOIN EMPLOYEE E2 ON E1.MGR_NO = E2.EMPNO
+        GROUP BY E2.ENAME
+    ) AS sub
+);
+
+select m.ename,m.sal,avg(e.sal)
+from employee e
+join employee m on e.mgr_no = m.empno
+group by m.ename,m.sal
+having m.sal > avg(e.sal);
+
+SELECT DISTINCT E2.ENAME AS SecondTopManager, E2.DEPTNO
+FROM EMPLOYEE E1
+JOIN EMPLOYEE E2 ON E1.EMPNO = E2.MGR_NO
+WHERE E1.MGR_NO IS NULL;
+
+SELECT *
+FROM EMPLOYEE E
+JOIN INCENTIVES I ON E.EMPNO = I.EMPNO
+WHERE I.INCENTIVE_DATE BETWEEN '2019-01-01' AND '2019-01-31'
+AND I.INCENTIVE_AMOUNT = (
+    SELECT DISTINCT INCENTIVE_AMOUNT
+    FROM INCENTIVES
+    WHERE INCENTIVE_DATE BETWEEN '2019-01-01' AND '2019-01-31'
+    ORDER BY INCENTIVE_AMOUNT DESC
+    LIMIT 1 OFFSET 1
+);
+
+SELECT E.ENAME
+FROM EMPLOYEE E
+JOIN EMPLOYEE M ON E.MGR_NO = M.EMPNO
+WHERE E.DEPTNO = M.DEPTNO;
 
 
+
+
+
+    
