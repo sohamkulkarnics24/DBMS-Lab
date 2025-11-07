@@ -152,8 +152,58 @@ FROM EMPLOYEE E
 JOIN EMPLOYEE M ON E.MGR_NO = M.EMPNO
 WHERE E.DEPTNO = M.DEPTNO;
 
+select e.ename as Employee, d.dname as Department, d.dloc as DepartmentLocation
+from employee e
+join dept d on e.deptno = d.deptno;
+
+insert into employee values
+(1007,'Abhi',1003,'2023-09-10',45000,10);
+
+select e.ename
+from employee e
+where e.empno not in (select empno
+				  from assigned_to);
+				   
+select p.pname, count(*)
+from project p
+join assigned_to a on p.pno = a.pno
+group by p.pname;
+
+select d.dname, avg(e.sal), max(e.sal)
+from dept d
+join employee e on e.deptno = d.deptno
+group by d.dname;
+
+select e.ename, sum(i.incentive_amount)
+from employee e
+join incentives i on e.empno = i.empno
+group by e.ename;
 
 
+select e.ename, p.pname
+from employee e
+join assigned_to a on e.empno = a.empno
+join project p on p.pno = a.pno
+where p.pname = 'Ad Campaign';
 
+select d.dname
+from dept d
+where d.deptno not in (select e.deptno
+					   from employee e);
+                       
+select m.ename, count(*)
+from employee m
+join employee e on e.mgr_no = m.empno
+group by m.ename;
 
-    
+insert into assigned_to values
+(1007,206,'Assistant');
+insert into assigned_to values
+(1007,201,'Assistant');
+
+select e.ename
+from employee e
+where (select count(pno)
+	   from assigned_to a
+       where e.empno = a.empno
+       group by empno) > 1;
